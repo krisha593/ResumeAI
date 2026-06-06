@@ -1,0 +1,168 @@
+html = open('templates/base.html', 'w', encoding='utf-8')
+html.write("""<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>{% block title %}ResumeAI{% endblock %}</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&family=Sora:wght@700;800&display=swap" rel="stylesheet"/>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Plus Jakarta Sans',sans-serif;background:#0D0C1E;color:#EAE8FF;min-height:100vh}
+#sidebar{position:fixed;top:0;left:0;bottom:0;width:260px;background:#100F22;border-right:1px solid rgba(255,255,255,0.07);z-index:1000;display:flex;flex-direction:column;overflow-y:auto;transition:transform .3s}
+.sb-brand{padding:22px 18px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;gap:10px}
+.sb-logo{width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:17px;color:#fff;flex-shrink:0}
+.sb-name{font-family:'Sora',sans-serif;font-weight:800;font-size:17px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sb-nav{padding:14px 10px;flex:1}
+.sb-sec{font-size:9.5px;font-weight:700;letter-spacing:1.8px;color:rgba(255,255,255,0.28);text-transform:uppercase;padding:10px 12px 5px}
+.sb-link{display:flex;align-items:center;gap:11px;padding:9px 13px;border-radius:10px;color:rgba(255,255,255,0.55);text-decoration:none;font-size:13.5px;font-weight:500;transition:all .2s;margin-bottom:2px;border-left:3px solid transparent}
+.sb-link:hover{background:rgba(91,76,245,0.14);color:#fff}
+.sb-link.active{background:linear-gradient(135deg,rgba(91,76,245,0.28),rgba(139,92,246,0.14));color:#fff;border-left-color:#A78BFA}
+.sb-link i{font-size:17px;width:20px;text-align:center}
+.sb-foot{padding:14px 10px;border-top:1px solid rgba(255,255,255,0.07)}
+.sb-user{display:flex;align-items:center;gap:9px;padding:9px 12px;border-radius:10px;background:rgba(255,255,255,0.03);margin-bottom:6px}
+.avatar{width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px;color:#fff;flex-shrink:0}
+#main{margin-left:260px;min-height:100vh;transition:margin-left .3s}
+.topbar{background:rgba(16,15,34,0.96);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.07);padding:11px 26px;position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between}
+.page-body{padding:26px}
+.card-d{background:#161528;border:1px solid rgba(255,255,255,0.07);border-radius:16px}
+.stat-card{background:#161528;border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px;transition:transform .2s,box-shadow .2s}
+.stat-card:hover{transform:translateY(-3px);box-shadow:0 10px 36px rgba(0,0,0,.35)}
+.stat-icon{width:46px;height:46px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px}
+.stat-val{font-size:30px;font-weight:800;line-height:1.1}
+.stat-lbl{font-size:12px;color:rgba(255,255,255,0.45);margin-top:2px}
+.prog-wrap{height:7px;border-radius:7px;background:rgba(255,255,255,0.05);overflow:hidden}
+.prog-bar{height:100%;border-radius:7px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);transition:width 1.2s ease;width:0%}
+.skill-badge{display:inline-flex;align-items:center;padding:4px 11px;border-radius:20px;font-size:11.5px;font-weight:600;background:rgba(91,76,245,0.13);border:1px solid rgba(91,76,245,0.28);color:#A78BFA;margin:2px 2px 2px 0}
+.skill-miss{background:rgba(239,68,68,0.09);border-color:rgba(239,68,68,0.28);color:#FCA5A5}
+.match-hi{background:rgba(16,185,129,0.15);color:#6EE7B7;border:1px solid rgba(16,185,129,0.3);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.match-md{background:rgba(245,158,11,0.12);color:#FCD34D;border:1px solid rgba(245,158,11,0.3);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.match-lo{background:rgba(239,68,68,0.1);color:#FCA5A5;border:1px solid rgba(239,68,68,0.25);padding:3px 10px;border-radius:20px;font-size:12px;font-weight:700}
+.btn-g{background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);border:none;color:#fff;font-weight:700;border-radius:10px;padding:10px 22px;transition:all .2s;font-size:14px}
+.btn-g:hover{transform:translateY(-1px);box-shadow:0 8px 24px rgba(91,76,245,.4);color:#fff}
+.btn-o{background:transparent;border:1px solid rgba(91,76,245,.35);color:#A78BFA;font-weight:600;border-radius:10px;padding:9px 20px;transition:all .2s;font-size:14px}
+.btn-o:hover{background:rgba(91,76,245,.12);color:#fff}
+.alert{border-radius:11px;font-size:13.5px}
+.alert-success{background:rgba(16,185,129,.13)!important;color:#6EE7B7!important;border:1px solid rgba(16,185,129,.22)!important}
+.alert-danger{background:rgba(239,68,68,.1)!important;color:#FCA5A5!important;border:1px solid rgba(239,68,68,.2)!important}
+.alert-warning{background:rgba(245,158,11,.1)!important;color:#FCD34D!important;border:1px solid rgba(245,158,11,.2)!important}
+.alert-info{background:rgba(6,182,212,.1)!important;color:#67E8F9!important;border:1px solid rgba(6,182,212,.2)!important}
+::-webkit-scrollbar{width:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:rgba(91,76,245,.3);border-radius:5px}
+@media(max-width:768px){#sidebar{transform:translateX(-100%)}#sidebar.show{transform:translateX(0)}#main{margin-left:0}}
+</style>
+{% block extra_css %}{% endblock %}
+</head>
+<body>
+{% if user.is_authenticated %}
+<nav id="sidebar">
+  <div class="sb-brand">
+    <div class="sb-logo">R</div>
+    <span class="sb-name">ResumeAI</span>
+  </div>
+  <div class="sb-nav">
+    <div class="sb-sec">Main</div>
+    <a href="{% url 'dashboard' %}" class="sb-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+      <i class="bi bi-grid-fill"></i> Dashboard
+    </a>
+    <a href="{% url 'upload_resume' %}" class="sb-link {% if request.resolver_match.url_name == 'upload_resume' %}active{% endif %}">
+      <i class="bi bi-cloud-upload-fill"></i> Upload Resume
+    </a>
+    <a href="{% url 'analysis_list' %}" class="sb-link {% if request.resolver_match.url_name == 'analysis_list' %}active{% endif %}">
+      <i class="bi bi-bar-chart-line-fill"></i> My Analyses
+    </a>
+    <div class="sb-sec">Career</div>
+    <a href="{% url 'job_recommendations' %}" class="sb-link {% if request.resolver_match.url_name == 'job_recommendations' %}active{% endif %}">
+      <i class="bi bi-briefcase-fill"></i> Job Matches
+    </a>
+    <a href="{% url 'course_recommendations' %}" class="sb-link {% if request.resolver_match.url_name == 'course_recommendations' %}active{% endif %}">
+      <i class="bi bi-mortarboard-fill"></i> Courses
+    </a>
+    <div class="sb-sec">Account</div>
+    <a href="{% url 'profile' %}" class="sb-link {% if request.resolver_match.url_name == 'profile' %}active{% endif %}">
+      <i class="bi bi-person-fill"></i> My Profile
+    </a>
+    {% if user.is_staff %}
+    <a href="{% url 'admin_dashboard' %}" class="sb-link">
+      <i class="bi bi-shield-fill"></i> Admin Panel
+    </a>
+    {% endif %}
+  </div>
+  <div class="sb-foot">
+    <div class="sb-user">
+      <div class="avatar">{{ user.first_name|slice:":1"|default:user.username|slice:":1"|upper }}</div>
+      <div style="min-width:0">
+        <div style="font-size:12.5px;font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ user.get_full_name|default:user.username }}</div>
+        <div style="font-size:10.5px;color:rgba(255,255,255,0.45)">{{ user.email|truncatechars:20 }}</div>
+      </div>
+    </div>
+    <a href="{% url 'logout' %}" class="sb-link" style="color:rgba(239,68,68,.7)">
+      <i class="bi bi-box-arrow-right"></i> Sign Out
+    </a>
+  </div>
+</nav>
+<div id="main">
+  <div class="topbar">
+    <div class="d-flex align-items-center gap-3">
+      <button class="d-md-none btn btn-sm" id="sbt" style="border:1px solid rgba(255,255,255,0.07);color:#fff;background:none;border-radius:8px;padding:4px 9px">
+        <i class="bi bi-list fs-5"></i>
+      </button>
+      <h6 class="mb-0" style="font-family:'Sora',sans-serif;font-size:15px;font-weight:700">{% block page_title %}Dashboard{% endblock %}</h6>
+    </div>
+    <div class="d-flex align-items-center gap-2">
+      <a href="{% url 'upload_resume' %}" class="btn btn-g btn-sm d-none d-md-flex align-items-center gap-1">
+        <i class="bi bi-plus-lg"></i> New Analysis
+      </a>
+      <div class="avatar" style="cursor:pointer" onclick="location.href='{% url 'profile' %}'">
+        {{ user.first_name|slice:":1"|default:user.username|slice:":1"|upper }}
+      </div>
+    </div>
+  </div>
+  <div class="page-body">
+    {% if messages %}
+      {% for m in messages %}
+        <div class="alert alert-{{ m.tags }} alert-dismissible fade show mb-3" role="alert">
+          {{ m }}
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+    {% block content %}{% endblock %}
+  </div>
+</div>
+{% else %}
+{% include 'partials/navbar.html' %}
+{% if messages %}
+<div class="container mt-3">
+  {% for m in messages %}
+    <div class="alert alert-{{ m.tags }} alert-dismissible fade show" role="alert">
+      {{ m }}
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert"></button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}
+{% block content %}{% endblock %}
+{% include 'partials/footer.html' %}
+{% endif %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+const sbt=document.getElementById('sbt'),sb=document.getElementById('sidebar');
+if(sbt&&sb){
+  sbt.addEventListener('click',()=>sb.classList.toggle('show'));
+  document.addEventListener('click',e=>{
+    if(!sb.contains(e.target)&&!sbt.contains(e.target))sb.classList.remove('show');
+  });
+}
+document.querySelectorAll('.prog-bar[data-w]').forEach(b=>{
+  setTimeout(()=>{b.style.width=b.dataset.w+'%'},300);
+});
+</script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>""")
+html.close()
+print("DONE! base.html written successfully")

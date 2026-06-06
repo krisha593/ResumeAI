@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Job Matches — ResumeAI{% endblock %}
+{% block page_title %}Job Recommendations{% endblock %}
+{% block content %}
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+  <div>
+    <h5 style="font-family:'Sora',sans-serif;font-weight:800;margin-bottom:3px">Your Job Matches</h5>
+    <p style="color:rgba(255,255,255,.4);font-size:13px;margin:0">Based on your resume skills and experience</p>
+  </div>
+  <a href="{% url 'generate_recommendations' %}" class="btn btn-g btn-sm"><i class="bi bi-arrow-clockwise me-1"></i>Refresh Matches</a>
+</div>
+{% if jobs %}
+<div class="row g-3">
+  {% for job in jobs %}
+  <div class="col-lg-6">
+    <div style="background:#161528;border:1px solid rgba(255,255,255,.07);border-radius:16px;padding:20px;transition:all .25s;height:100%" onmouseover="this.style.borderColor='rgba(91,76,245,.35)';this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,255,255,.07)';this.style.transform='translateY(0)'">
+      <div class="d-flex align-items-start justify-content-between mb-3">
+        <div class="d-flex align-items-center gap-3">
+          <div style="width:46px;height:46px;border-radius:12px;background:{{ job.color_class }};display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:#fff;flex-shrink:0">{{ job.logo_initial }}</div>
+          <div>
+            <div style="font-size:14.5px;font-weight:700">{{ job.title }}</div>
+            <div style="font-size:12.5px;color:rgba(255,255,255,.45)">{{ job.company }}</div>
+          </div>
+        </div>
+        <span class="{% if job.match_percentage >= 70 %}match-hi{% elif job.match_percentage >= 45 %}match-md{% else %}match-lo{% endif %}">{{ job.match_percentage }}% Match</span>
+      </div>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <span style="font-size:11.5px;color:rgba(255,255,255,.45)"><i class="bi bi-geo-alt me-1"></i>{{ job.location }}</span>
+        <span style="font-size:11.5px;color:rgba(255,255,255,.45)"><i class="bi bi-clock me-1"></i>{{ job.job_type }}</span>
+        <span style="font-size:11.5px;color:rgba(255,255,255,.45)"><i class="bi bi-briefcase me-1"></i>{{ job.experience_required }}</span>
+        {% if job.salary_range %}<span style="font-size:11.5px;color:#6EE7B7"><i class="bi bi-currency-rupee"></i>{{ job.salary_range }}</span>{% endif %}
+      </div>
+      <div class="mb-3">
+        {% for skill in job.required_skills|slice:":5" %}<span class="skill-badge" style="font-size:11px">{{ skill }}</span>{% endfor %}
+      </div>
+      <div class="prog-wrap mb-3"><div class="prog-bar" data-w="{{ job.match_percentage }}"></div></div>
+      <a href="{{ job.job_url|default:'#' }}" class="btn btn-g btn-sm w-100" target="_blank"><i class="bi bi-send-fill me-1"></i>Apply Now</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="card-d p-5 text-center">
+  <div style="font-size:60px;margin-bottom:18px">💼</div>
+  <h5 style="font-family:'Sora',sans-serif;font-weight:800;margin-bottom:10px">No Job Matches Yet</h5>
+  <p style="color:rgba(255,255,255,.38);font-size:14px;max-width:340px;margin:0 auto 22px">Upload and analyze your resume first, then we'll match you with the best job opportunities.</p>
+  <div class="d-flex gap-2 justify-content-center">
+    <a href="{% url 'upload_resume' %}" class="btn btn-g">Upload Resume</a>
+    <a href="{% url 'generate_recommendations' %}" class="btn btn-o">Generate Matches</a>
+  </div>
+</div>
+{% endif %}
+{% endblock %}

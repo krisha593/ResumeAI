@@ -1,0 +1,167 @@
+{% extends 'base.html' %}
+{% block title %}Resume Analysis — ResumeAI{% endblock %}
+{% block page_title %}Resume Analysis{% endblock %}
+
+{% block content %}
+<!-- Header -->
+<div class="d-flex align-items-center justify-content-between mb-4 flex-wrap gap-3">
+  <div>
+    <h5 style="font-family:'Sora',sans-serif;font-weight:800;margin-bottom:4px;">{{ resume.original_filename }}</h5>
+    <p style="color:rgba(255,255,255,0.4);font-size:13px;margin:0;">Analyzed {{ resume.uploaded_at|date:"M d, Y · H:i" }}</p>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'generate_recommendations' %}" class="btn btn-outline-custom btn-sm">
+      <i class="bi bi-stars me-1"></i>Get Job Matches
+    </a>
+    <a href="{% url 'upload_resume' %}" class="btn btn-primary-custom btn-sm">
+      <i class="bi bi-cloud-upload-fill me-1"></i>New Analysis
+    </a>
+  </div>
+</div>
+
+<!-- Score Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card text-center">
+      <div style="font-size:48px;font-weight:800;font-family:'Sora',sans-serif;background:linear-gradient(135deg,#5B4CF5,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">{{ analysis.resume_score }}</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:8px;">Resume Score</div>
+      <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;"><div style="height:100%;width:{{ analysis.resume_score }}%;background:linear-gradient(135deg,#5B4CF5,#8B5CF6);border-radius:4px;"></div></div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card text-center">
+      <div style="font-size:48px;font-weight:800;font-family:'Sora',sans-serif;color:#67E8F9;">{{ analysis.ats_score }}</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);margin-bottom:8px;">ATS Score</div>
+      <div style="height:4px;background:rgba(255,255,255,0.06);border-radius:4px;overflow:hidden;"><div style="height:100%;width:{{ analysis.ats_score }}%;background:linear-gradient(135deg,#06B6D4,#3B82F6);border-radius:4px;"></div></div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card text-center">
+      <div style="font-size:36px;font-weight:800;font-family:'Sora',sans-serif;color:#A78BFA;">{{ analysis.detected_role }}</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);">Detected Role</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card text-center">
+      <div style="font-size:28px;font-weight:800;font-family:'Sora',sans-serif;color:#6EE7B7;">{{ analysis.experience_level }}</div>
+      <div style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:rgba(255,255,255,0.4);">Experience Level</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Left Column -->
+  <div class="col-lg-7">
+    <!-- Section Scores -->
+    <div class="card-dark p-4 mb-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:20px;">Detailed Score Breakdown</h6>
+      {% for label, score, color in scores %}
+      <div class="mb-3">
+        <div class="d-flex justify-content-between mb-2">
+          <span style="font-size:13px;font-weight:500;">{{ label }}</span>
+          <span style="font-size:13px;font-weight:700;color:{{ color }};">{{ score }}<span style="color:rgba(255,255,255,0.3);font-weight:400;">/100</span></span>
+        </div>
+        <div class="progress-custom"><div class="progress-bar-custom" style="width:0%;background:{{ color }};" data-width="{{ score }}"></div></div>
+      </div>
+      {% empty %}
+      <div class="mb-3">
+        <div class="d-flex justify-content-between mb-2"><span style="font-size:13px;">Education</span><span style="font-size:13px;font-weight:700;color:#A78BFA;">{{ analysis.education_score }}/100</span></div>
+        <div class="progress-custom"><div class="progress-bar-custom" data-width="{{ analysis.education_score }}" style="width:0%;"></div></div>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between mb-2"><span style="font-size:13px;">Experience</span><span style="font-size:13px;font-weight:700;color:#FCD34D;">{{ analysis.experience_score }}/100</span></div>
+        <div class="progress-custom"><div class="progress-bar-custom" data-width="{{ analysis.experience_score }}" style="width:0%;background:linear-gradient(135deg,#F59E0B,#D97706);"></div></div>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between mb-2"><span style="font-size:13px;">Skills</span><span style="font-size:13px;font-weight:700;color:#6EE7B7;">{{ analysis.skills_score }}/100</span></div>
+        <div class="progress-custom"><div class="progress-bar-custom" data-width="{{ analysis.skills_score }}" style="width:0%;background:linear-gradient(135deg,#10B981,#059669);"></div></div>
+      </div>
+      <div class="mb-3">
+        <div class="d-flex justify-content-between mb-2"><span style="font-size:13px;">Formatting</span><span style="font-size:13px;font-weight:700;color:#67E8F9;">{{ analysis.formatting_score }}/100</span></div>
+        <div class="progress-custom"><div class="progress-bar-custom" data-width="{{ analysis.formatting_score }}" style="width:0%;background:linear-gradient(135deg,#06B6D4,#3B82F6);"></div></div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- Improvement Suggestions -->
+    <div class="card-dark p-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;"><i class="bi bi-lightbulb-fill me-2" style="color:#FCD34D;"></i>AI Improvement Suggestions</h6>
+      {% for suggestion in analysis.improvement_suggestions %}
+      <div class="d-flex gap-3 mb-3 p-3" style="background:rgba(245,158,11,0.06);border:1px solid rgba(245,158,11,0.12);border-radius:12px;">
+        <div style="color:#FCD34D;font-size:18px;flex-shrink:0;margin-top:2px;">{{ forloop.counter }}</div>
+        <p style="font-size:13px;color:rgba(255,255,255,0.7);line-height:1.6;margin:0;">{{ suggestion }}</p>
+      </div>
+      {% empty %}
+      <p style="color:rgba(255,255,255,0.4);font-size:14px;">Great job! Your resume looks strong. Keep it updated with your latest experience.</p>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- Right Column -->
+  <div class="col-lg-5">
+    <!-- Extracted Skills -->
+    <div class="card-dark p-4 mb-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;">
+        <i class="bi bi-check-circle-fill me-2" style="color:#6EE7B7;"></i>
+        Extracted Skills <span style="color:rgba(255,255,255,0.3);font-weight:400;font-size:13px;">({{ analysis.extracted_skills|length }})</span>
+      </h6>
+      {% for skill in analysis.extracted_skills %}
+        <span class="skill-badge">{{ skill }}</span>
+      {% empty %}
+        <p style="color:rgba(255,255,255,0.4);font-size:13px;">No skills detected. Make sure your resume has a Skills section.</p>
+      {% endfor %}
+    </div>
+
+    <!-- Missing Skills -->
+    {% if analysis.missing_skills %}
+    <div class="card-dark p-4 mb-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;">
+        <i class="bi bi-exclamation-circle-fill me-2" style="color:#FCA5A5;"></i>
+        Missing Skills <span style="color:rgba(255,255,255,0.3);font-weight:400;font-size:13px;">({{ analysis.missing_skills|length }})</span>
+      </h6>
+      {% for skill in analysis.missing_skills %}
+        <span class="skill-badge missing">{{ skill }}</span>
+      {% endfor %}
+      <div class="mt-3">
+        <a href="{% url 'course_recommendations' %}" class="btn btn-outline-custom btn-sm w-100">
+          <i class="bi bi-mortarboard-fill me-1"></i>Find Courses for These Skills
+        </a>
+      </div>
+    </div>
+    {% endif %}
+
+    <!-- ATS Compatibility -->
+    <div class="card-dark p-4 mb-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;">ATS Compatibility</h6>
+      <div class="text-center mb-3">
+        <div style="font-size:56px;font-weight:800;font-family:'Sora',sans-serif;color:{% if analysis.ats_score >= 70 %}#6EE7B7{% elif analysis.ats_score >= 50 %}#FCD34D{% else %}#FCA5A5{% endif %};">
+          {{ analysis.ats_score }}%
+        </div>
+        <div style="font-size:14px;font-weight:600;color:{% if analysis.ats_score >= 70 %}#6EE7B7{% elif analysis.ats_score >= 50 %}#FCD34D{% else %}#FCA5A5{% endif %};">
+          {% if analysis.ats_score >= 70 %}Good — Passes Most ATS{% elif analysis.ats_score >= 50 %}Fair — Needs Improvement{% else %}Poor — Likely Rejected{% endif %}
+        </div>
+      </div>
+      <div class="progress-custom mb-3" style="height:12px;">
+        <div class="progress-bar-custom" data-width="{{ analysis.ats_score }}" style="width:0%;height:100%;"></div>
+      </div>
+      <p style="font-size:12px;color:rgba(255,255,255,0.4);">ATS (Applicant Tracking System) compatibility determines if your resume gets seen by recruiters.</p>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="card-dark p-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;">Quick Actions</h6>
+      <div class="d-grid gap-2">
+        <a href="{% url 'generate_recommendations' %}" class="btn btn-primary-custom">
+          <i class="bi bi-briefcase-fill me-2"></i>Get Job Recommendations
+        </a>
+        <a href="{% url 'course_recommendations' %}" class="btn btn-outline-custom">
+          <i class="bi bi-mortarboard-fill me-2"></i>View Course Suggestions
+        </a>
+        <a href="{% url 'upload_resume' %}" class="btn btn-outline-custom">
+          <i class="bi bi-cloud-upload-fill me-2"></i>Upload Improved Resume
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

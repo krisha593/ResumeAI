@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Register — ResumeAI{% endblock %}
+{% block content %}
+<style>
+  body { background: #0F0E1A !important; }
+  .auth-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 16px; background: radial-gradient(ellipse 70% 50% at 50% 30%, rgba(91,76,245,0.15) 0%, transparent 60%); }
+  .auth-card { background: #1A1830; border: 1px solid rgba(255,255,255,0.08); border-radius: 24px; padding: 44px 40px; width: 100%; max-width: 480px; }
+  .form-control-dark { background: rgba(255,255,255,0.04) !important; border: 1px solid rgba(255,255,255,0.1) !important; border-radius: 10px !important; color: white !important; padding: 11px 16px !important; font-size: 14px !important; transition: all 0.2s ease !important; }
+  .form-control-dark:focus { background: rgba(91,76,245,0.08) !important; border-color: rgba(91,76,245,0.5) !important; box-shadow: 0 0 0 3px rgba(91,76,245,0.1) !important; outline: none !important; }
+  .form-control-dark::placeholder { color: rgba(255,255,255,0.25) !important; }
+  .form-label-dark { font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.7); margin-bottom: 6px; }
+  .btn-auth { background: linear-gradient(135deg, #5B4CF5, #8B5CF6); border: none; border-radius: 10px; padding: 13px; font-size: 15px; font-weight: 700; color: white; width: 100%; transition: all 0.25s ease; }
+  .btn-auth:hover { transform: translateY(-1px); box-shadow: 0 8px 24px rgba(91,76,245,0.4); color: white; }
+</style>
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="text-center mb-4">
+      <div style="width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:22px;color:white;font-family:'Sora',sans-serif;margin:0 auto 16px;">R</div>
+      <h3 style="font-family:'Sora',sans-serif;font-weight:800;">Create Account</h3>
+      <p style="color:rgba(255,255,255,0.4);font-size:14px;margin-top:6px;">Start your AI career journey today — free!</p>
+    </div>
+    {% if messages %}{% for m in messages %}<div class="alert alert-{{ m.tags }} mb-3">{{ m }}</div>{% endfor %}{% endif %}
+    <form method="post">
+      {% csrf_token %}
+      <div class="row g-3 mb-3">
+        <div class="col-6">
+          <label class="form-label-dark">First Name</label>
+          <input type="text" name="first_name" class="form-control form-control-dark" placeholder="John" required />
+        </div>
+        <div class="col-6">
+          <label class="form-label-dark">Last Name</label>
+          <input type="text" name="last_name" class="form-control form-control-dark" placeholder="Doe" required />
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label-dark">Username</label>
+        <input type="text" name="username" class="form-control form-control-dark" placeholder="johndoe123" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label-dark">Email Address</label>
+        <input type="email" name="email" class="form-control form-control-dark" placeholder="john@example.com" required />
+      </div>
+      <div class="mb-3">
+        <label class="form-label-dark">Password</label>
+        <input type="password" name="password" class="form-control form-control-dark" placeholder="Min. 8 characters" required />
+      </div>
+      <div class="mb-4">
+        <label class="form-label-dark">Confirm Password</label>
+        <input type="password" name="confirm_password" class="form-control form-control-dark" placeholder="Repeat password" required />
+      </div>
+      <button type="submit" class="btn btn-auth mb-4">Create My Account</button>
+    </form>
+    <p class="text-center" style="color:rgba(255,255,255,0.4);font-size:14px;">
+      Already have an account? <a href="{% url 'login' %}" style="color:#A78BFA;font-weight:600;text-decoration:none;">Sign In</a>
+    </p>
+  </div>
+</div>
+{% endblock %}

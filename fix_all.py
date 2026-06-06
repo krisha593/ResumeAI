@@ -1,0 +1,238 @@
+# Fix home.html - complete working version
+home = """{% extends 'base.html' %}
+{% block title %}ResumeAI - AI Powered Resume Analyzer{% endblock %}
+{% block content %}
+<style>
+body{background:#0D0C1E!important}
+.grad-t{background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.feat-card{background:#161528;border:1px solid rgba(255,255,255,.08);border-radius:18px;padding:26px;transition:all .3s;height:100%}
+.feat-card:hover{transform:translateY(-4px);border-color:rgba(91,76,245,.35)}
+.btn-main{background:linear-gradient(135deg,#5B4CF5,#8B5CF6);color:#fff!important;border:none;border-radius:12px;padding:13px 28px;font-size:14px;font-weight:700;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn-ghost{background:transparent;color:rgba(255,255,255,.8)!important;border:1px solid rgba(255,255,255,.15);border-radius:12px;padding:13px 28px;font-size:14px;font-weight:500;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.step-n{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#5B4CF5,#8B5CF6);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:16px;color:#fff;flex-shrink:0}
+</style>
+
+<!-- HERO SECTION -->
+<section style="min-height:92vh;display:flex;align-items:center;padding:60px 0;background:radial-gradient(ellipse 80% 55% at 50% 15%,rgba(91,76,245,.15) 0%,transparent 65%)">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <div style="display:inline-flex;align-items:center;gap:7px;padding:5px 16px;border-radius:20px;background:rgba(91,76,245,.13);border:1px solid rgba(91,76,245,.3);font-size:11px;font-weight:700;color:#A78BFA;text-transform:uppercase;letter-spacing:1px;margin-bottom:22px">
+          <i class="bi bi-stars"></i> AI-Powered Career Platform
+        </div>
+        <h1 style="font-family:'Sora',sans-serif;font-size:clamp(32px,5vw,64px);font-weight:800;line-height:1.1;margin-bottom:20px">
+          Get Your Resume<br/><span class="grad-t">Scored by AI.</span><br/>Land Dream Jobs.
+        </h1>
+        <p style="font-size:16px;color:rgba(255,255,255,.55);line-height:1.75;max-width:460px;margin-bottom:28px">
+          Upload your PDF resume and get instant AI analysis — ATS score, skill gaps, job matches, and course recommendations.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mb-5">
+          <a href="{% url 'register' %}" class="btn-main">
+            <i class="bi bi-rocket-takeoff-fill"></i> Get Started Free
+          </a>
+          <a href="{% url 'about' %}" class="btn-ghost">
+            <i class="bi bi-play-circle-fill"></i> Learn More
+          </a>
+        </div>
+        <div class="d-flex gap-4">
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:32px;font-weight:800" class="grad-t">500+</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.35)">Resumes Analyzed</div>
+          </div>
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:32px;font-weight:800" class="grad-t">95%</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.35)">ATS Accuracy</div>
+          </div>
+          <div>
+            <div style="font-family:'Sora',sans-serif;font-size:32px;font-weight:800" class="grad-t">50+</div>
+            <div style="font-size:12px;color:rgba(255,255,255,.35)">Job Categories</div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div style="background:rgba(22,21,40,.9);border:1px solid rgba(255,255,255,.1);border-radius:20px;padding:26px">
+          <div class="d-flex align-items-center justify-content-between mb-4">
+            <div>
+              <div style="font-family:'Sora',sans-serif;font-weight:700;font-size:15px">Resume Analysis</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.35)">john_resume_2024.pdf</div>
+            </div>
+            <span style="background:rgba(16,185,129,.13);color:#6EE7B7;border:1px solid rgba(16,185,129,.28);padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700">Analyzed</span>
+          </div>
+          <div class="row g-3 mb-3">
+            <div class="col-6">
+              <div style="background:rgba(91,76,245,.1);border:1px solid rgba(91,76,245,.2);border-radius:12px;padding:16px;text-align:center">
+                <div style="font-size:36px;font-weight:800;font-family:'Sora',sans-serif" class="grad-t">78</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px">Resume Score</div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div style="background:rgba(6,182,212,.1);border:1px solid rgba(6,182,212,.2);border-radius:12px;padding:16px;text-align:center">
+                <div style="font-size:36px;font-weight:800;font-family:'Sora',sans-serif;color:#67E8F9">82</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.35);text-transform:uppercase;letter-spacing:1px">ATS Score</div>
+              </div>
+            </div>
+          </div>
+          <div class="mb-2">
+            <div class="d-flex justify-content-between mb-1" style="font-size:12px"><span>Skills Match</span><span style="color:#A78BFA;font-weight:700">85%</span></div>
+            <div style="height:6px;background:rgba(255,255,255,.06);border-radius:6px"><div style="height:100%;width:85%;background:linear-gradient(135deg,#5B4CF5,#8B5CF6);border-radius:6px"></div></div>
+          </div>
+          <div class="mb-3">
+            <div class="d-flex justify-content-between mb-1" style="font-size:12px"><span>ATS Compatibility</span><span style="color:#67E8F9;font-weight:700">82%</span></div>
+            <div style="height:6px;background:rgba(255,255,255,.06);border-radius:6px"><div style="height:100%;width:82%;background:linear-gradient(135deg,#06B6D4,#3B82F6);border-radius:6px"></div></div>
+          </div>
+          <div style="font-size:10px;color:rgba(255,255,255,.35);margin-bottom:8px;text-transform:uppercase;letter-spacing:1px">Detected Skills</div>
+          <div>
+            <span class="skill-badge">Python</span>
+            <span class="skill-badge">Django</span>
+            <span class="skill-badge">React</span>
+            <span class="skill-badge">SQL</span>
+            <span class="skill-badge">Docker</span>
+            <span class="skill-badge">Git</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES SECTION -->
+<section style="padding:80px 0">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(24px,3.5vw,40px)">
+        Everything You Need to <span class="grad-t">Advance Your Career</span>
+      </h2>
+    </div>
+    <div class="row g-4">
+      <div class="col-md-6 col-lg-4">
+        <div class="feat-card">
+          <div style="font-size:36px;margin-bottom:14px">🔍</div>
+          <h5 style="font-weight:700;margin-bottom:8px">Deep Resume Analysis</h5>
+          <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">AI scans every section to give a comprehensive quality score out of 100.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="feat-card">
+          <div style="font-size:36px;margin-bottom:14px">🤖</div>
+          <h5 style="font-weight:700;margin-bottom:8px">ATS Score Check</h5>
+          <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Know how your resume performs in Applicant Tracking Systems at top companies.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="feat-card">
+          <div style="font-size:36px;margin-bottom:14px">💼</div>
+          <h5 style="font-weight:700;margin-bottom:8px">Smart Job Matching</h5>
+          <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Get personalized job recommendations with match percentages based on your skills.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="feat-card">
+          <div style="font-size:36px;margin-bottom:14px">📚</div>
+          <h5 style="font-weight:700;margin-bottom:8px">Course Recommendations</h5>
+          <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Bridge skill gaps with courses from Udemy, Coursera and top platforms.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="feat-card">
+          <div style="font-size:36px;margin-bottom:14px">⚡</div>
+          <h5 style="font-weight:700;margin-bottom:8px">Instant Results</h5>
+          <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Complete AI analysis in under 10 seconds. No waiting required.</p>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-4">
+        <div class="feat-card">
+          <div style="font-size:36px;margin-bottom:14px">📈</div>
+          <h5 style="font-weight:700;margin-bottom:8px">Improvement Tips</h5>
+          <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Actionable suggestions to improve your resume score and get more interviews.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section style="padding:80px 0;background:rgba(22,21,40,.4)">
+  <div class="container">
+    <div class="text-center mb-5">
+      <h2 style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(24px,3.5vw,38px)">
+        How It <span class="grad-t">Works</span>
+      </h2>
+    </div>
+    <div class="row g-4 justify-content-center">
+      <div class="col-md-4">
+        <div class="d-flex gap-3">
+          <div class="step-n">1</div>
+          <div>
+            <h5 style="font-weight:700;margin-bottom:8px">Upload Resume</h5>
+            <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Upload your PDF resume up to 5MB size.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex gap-3">
+          <div class="step-n">2</div>
+          <div>
+            <h5 style="font-weight:700;margin-bottom:8px">AI Analyzes It</h5>
+            <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">AI extracts skills, scores sections, checks ATS compatibility.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="d-flex gap-3">
+          <div class="step-n">3</div>
+          <div>
+            <h5 style="font-weight:700;margin-bottom:8px">Get Results</h5>
+            <p style="color:rgba(255,255,255,.45);font-size:13.5px;line-height:1.7">Receive job matches, courses, and improvement tips instantly.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="padding:80px 0">
+  <div class="container">
+    <div style="background:linear-gradient(135deg,rgba(91,76,245,.2),rgba(139,92,246,.12));border:1px solid rgba(91,76,245,.25);border-radius:22px;padding:60px;text-align:center">
+      <h2 style="font-family:'Sora',sans-serif;font-weight:800;font-size:clamp(20px,3vw,36px);margin-bottom:14px">
+        Ready to Supercharge <span class="grad-t">Your Career?</span>
+      </h2>
+      <p style="color:rgba(255,255,255,.45);font-size:15px;max-width:440px;margin:0 auto 28px">
+        Join hundreds of students using ResumeAI. Free to start, always.
+      </p>
+      <a href="{% url 'register' %}" class="btn-main" style="font-size:15px;padding:14px 36px">
+        <i class="bi bi-rocket-takeoff-fill"></i> Analyze My Resume Free
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}"""
+
+with open('templates/home.html', 'w', encoding='utf-8') as f:
+    f.write(home)
+print("SUCCESS - home.html fixed!")
+
+# Also fix navbar partial
+navbar = """<nav style="background:rgba(13,12,30,.97);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,0.07);position:sticky;top:0;z-index:999;padding:0">
+<div class="container d-flex align-items-center justify-content-between" style="height:62px">
+  <a href="{% url 'home' %}" class="d-flex align-items-center gap-2 text-decoration-none">
+    <div style="width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);display:flex;align-items:center;justify-content:center;font-weight:800;color:#fff;font-size:15px">R</div>
+    <span style="font-family:'Sora',sans-serif;font-weight:800;font-size:17px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">ResumeAI</span>
+  </a>
+  <div class="d-none d-md-flex align-items-center gap-4">
+    <a href="{% url 'home' %}" style="color:rgba(255,255,255,.65);font-size:14px;font-weight:500;text-decoration:none">Home</a>
+    <a href="{% url 'about' %}" style="color:rgba(255,255,255,.65);font-size:14px;font-weight:500;text-decoration:none">About</a>
+    <a href="{% url 'contact' %}" style="color:rgba(255,255,255,.65);font-size:14px;font-weight:500;text-decoration:none">Contact</a>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="{% url 'login' %}" style="border:1px solid rgba(91,76,245,.4);color:#A78BFA;border-radius:9px;padding:7px 18px;font-size:13px;font-weight:600;text-decoration:none">Login</a>
+    <a href="{% url 'register' %}" style="background:linear-gradient(135deg,#5B4CF5,#8B5CF6);color:#fff;border:none;border-radius:9px;padding:7px 18px;font-size:13px;font-weight:700;text-decoration:none">Get Started</a>
+  </div>
+</div>
+</nav>"""
+
+with open('templates/partials/navbar.html', 'w', encoding='utf-8') as f:
+    f.write(navbar)
+print("SUCCESS - navbar.html fixed!")
+print("")
+print("Now run: python manage.py runserver")

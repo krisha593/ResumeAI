@@ -1,0 +1,196 @@
+{% extends 'base.html' %}
+{% block title %}Dashboard — ResumeAI{% endblock %}
+{% block page_title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Welcome Banner -->
+<div style="background:linear-gradient(135deg,rgba(91,76,245,0.2),rgba(139,92,246,0.15));border:1px solid rgba(91,76,245,0.25);border-radius:20px;padding:28px 32px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+  <div>
+    <h4 style="font-family:'Sora',sans-serif;font-weight:800;margin-bottom:6px;">Hey, {{ user.first_name|default:user.username }}! 👋</h4>
+    <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:0;">
+      {% if latest_analysis %}Your latest resume scored <strong style="color:#A78BFA;">{{ latest_analysis.resume_score }}/100</strong> — keep improving!{% else %}Upload your first resume to get started with AI analysis.{% endif %}
+    </p>
+  </div>
+  <a href="{% url 'upload_resume' %}" class="btn btn-primary-custom">
+    <i class="bi bi-cloud-upload-fill me-2"></i>{% if latest_analysis %}Analyze New Resume{% else %}Upload Resume{% endif %}
+  </a>
+</div>
+
+<!-- Stat Cards -->
+<div class="row g-4 mb-4">
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:rgba(91,76,245,0.15);"><i class="bi bi-file-earmark-text-fill" style="color:#A78BFA;"></i></div>
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);">Total</span>
+      </div>
+      <div class="stat-value">{{ resume_count }}</div>
+      <div class="stat-label">Resumes Uploaded</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:rgba(16,185,129,0.15);"><i class="bi bi-graph-up-arrow" style="color:#6EE7B7;"></i></div>
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);">Latest</span>
+      </div>
+      <div class="stat-value" style="color:#6EE7B7;">{{ latest_analysis.resume_score|default:"—" }}</div>
+      <div class="stat-label">Resume Score</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:rgba(6,182,212,0.15);"><i class="bi bi-robot" style="color:#67E8F9;"></i></div>
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);">ATS</span>
+      </div>
+      <div class="stat-value" style="color:#67E8F9;">{{ latest_analysis.ats_score|default:"—" }}</div>
+      <div class="stat-label">ATS Score</div>
+    </div>
+  </div>
+  <div class="col-6 col-lg-3">
+    <div class="stat-card">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <div class="stat-icon" style="background:rgba(245,158,11,0.15);"><i class="bi bi-briefcase-fill" style="color:#FCD34D;"></i></div>
+        <span style="font-size:12px;color:rgba(255,255,255,0.35);">Matched</span>
+      </div>
+      <div class="stat-value" style="color:#FCD34D;">{{ job_count }}</div>
+      <div class="stat-label">Job Matches</div>
+    </div>
+  </div>
+</div>
+
+<div class="row g-4">
+  <!-- Score Overview -->
+  {% if latest_analysis %}
+  <div class="col-lg-8">
+    <div class="card-dark p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin:0;">Score Breakdown</h6>
+        <a href="{% url 'resume_analysis' latest_resume.pk %}" style="font-size:13px;color:#A78BFA;text-decoration:none;">View Full Report <i class="bi bi-arrow-right"></i></a>
+      </div>
+      <div class="row g-4 text-center mb-4">
+        <div class="col-6 col-md-3">
+          <div style="background:rgba(91,76,245,0.1);border:1px solid rgba(91,76,245,0.2);border-radius:14px;padding:20px;">
+            <div style="font-size:32px;font-weight:800;font-family:'Sora',sans-serif;color:#A78BFA;">{{ latest_analysis.resume_score }}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Overall</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2);border-radius:14px;padding:20px;">
+            <div style="font-size:32px;font-weight:800;font-family:'Sora',sans-serif;color:#67E8F9;">{{ latest_analysis.ats_score }}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">ATS</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div style="background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.2);border-radius:14px;padding:20px;">
+            <div style="font-size:32px;font-weight:800;font-family:'Sora',sans-serif;color:#6EE7B7;">{{ latest_analysis.skills_score }}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Skills</div>
+          </div>
+        </div>
+        <div class="col-6 col-md-3">
+          <div style="background:rgba(245,158,11,0.1);border:1px solid rgba(245,158,11,0.2);border-radius:14px;padding:20px;">
+            <div style="font-size:32px;font-weight:800;font-family:'Sora',sans-serif;color:#FCD34D;">{{ latest_analysis.experience_score }}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:1px;">Experience</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed progress bars -->
+      <div class="row g-3">
+        {% with latest_analysis.education_score as edu %}
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between mb-1" style="font-size:13px;"><span>Education</span><span style="color:#A78BFA;font-weight:600;">{{ edu }}/100</span></div>
+          <div class="progress-custom"><div class="progress-bar-custom" style="width:0%" data-width="{{ edu }}"></div></div>
+        </div>
+        {% endwith %}
+        {% with latest_analysis.formatting_score as fmt %}
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between mb-1" style="font-size:13px;"><span>Formatting</span><span style="color:#67E8F9;font-weight:600;">{{ fmt }}/100</span></div>
+          <div class="progress-custom"><div class="progress-bar-custom" style="width:0%;background:linear-gradient(135deg,#06B6D4,#3B82F6);" data-width="{{ fmt }}"></div></div>
+        </div>
+        {% endwith %}
+        {% with latest_analysis.skills_score as sk %}
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between mb-1" style="font-size:13px;"><span>Skills Match</span><span style="color:#6EE7B7;font-weight:600;">{{ sk }}/100</span></div>
+          <div class="progress-custom"><div class="progress-bar-custom" style="width:0%;background:linear-gradient(135deg,#10B981,#059669);" data-width="{{ sk }}"></div></div>
+        </div>
+        {% endwith %}
+        {% with latest_analysis.experience_score as exp %}
+        <div class="col-md-6">
+          <div class="d-flex justify-content-between mb-1" style="font-size:13px;"><span>Experience</span><span style="color:#FCD34D;font-weight:600;">{{ exp }}/100</span></div>
+          <div class="progress-custom"><div class="progress-bar-custom" style="width:0%;background:linear-gradient(135deg,#F59E0B,#D97706);" data-width="{{ exp }}"></div></div>
+        </div>
+        {% endwith %}
+      </div>
+    </div>
+  </div>
+
+  <!-- Skills & Info -->
+  <div class="col-lg-4">
+    <div class="card-dark p-4 mb-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;">Detected Role</h6>
+      <div style="background:rgba(91,76,245,0.12);border:1px solid rgba(91,76,245,0.25);border-radius:12px;padding:16px;text-align:center;">
+        <div style="font-size:18px;font-weight:700;color:#A78BFA;">{{ latest_analysis.detected_role }}</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-top:4px;">{{ latest_analysis.experience_level }}</div>
+      </div>
+    </div>
+    <div class="card-dark p-4">
+      <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:16px;">Top Skills</h6>
+      <div>
+        {% for skill in latest_analysis.extracted_skills|slice:":8" %}
+          <span class="skill-badge">{{ skill }}</span>
+        {% endfor %}
+      </div>
+      {% if latest_analysis.missing_skills %}
+      <div class="mt-3">
+        <div style="font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:8px;">Missing Skills</div>
+        {% for skill in latest_analysis.missing_skills|slice:":4" %}
+          <span class="skill-badge missing">{{ skill }}</span>
+        {% endfor %}
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% else %}
+  <!-- No resume uploaded yet -->
+  <div class="col-12">
+    <div class="card-dark p-5 text-center">
+      <div style="font-size:64px;margin-bottom:20px;">📄</div>
+      <h5 style="font-family:'Sora',sans-serif;font-weight:700;margin-bottom:12px;">No Resume Analyzed Yet</h5>
+      <p style="color:rgba(255,255,255,0.4);font-size:14px;max-width:360px;margin:0 auto 24px;">Upload your PDF resume to get instant AI analysis, ATS score, and job recommendations.</p>
+      <a href="{% url 'upload_resume' %}" class="btn btn-primary-custom">
+        <i class="bi bi-cloud-upload-fill me-2"></i>Upload My Resume
+      </a>
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Recent Activity -->
+  <div class="col-12">
+    <div class="card-dark p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin:0;">Recent Activity</h6>
+        <a href="{% url 'analysis_list' %}" style="font-size:13px;color:#A78BFA;text-decoration:none;">View All</a>
+      </div>
+      {% if recent_activity %}
+        {% for activity in recent_activity %}
+        <div class="d-flex align-items-center gap-3 py-2" style="border-bottom:1px solid rgba(255,255,255,0.04);">
+          <div style="width:36px;height:36px;border-radius:10px;background:rgba(91,76,245,0.15);display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="bi bi-{{ activity.icon }}" style="color:#A78BFA;"></i>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">{{ activity.message }}</div>
+            <div style="font-size:11px;color:rgba(255,255,255,0.35);">{{ activity.time|timesince }} ago</div>
+          </div>
+          <span style="background:rgba(16,185,129,0.12);color:#6EE7B7;padding:3px 8px;border-radius:12px;font-size:11px;font-weight:600;white-space:nowrap;">Completed</span>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p style="color:rgba(255,255,255,0.3);font-size:14px;text-align:center;padding:20px 0;">No activity yet. Upload a resume to get started.</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

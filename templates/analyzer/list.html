@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}My Analyses — ResumeAI{% endblock %}
+{% block page_title %}My Analyses{% endblock %}
+{% block content %}
+<div class="card-d p-4">
+  <div class="d-flex align-items-center justify-content-between mb-4">
+    <h6 style="font-family:'Sora',sans-serif;font-weight:700;margin:0">All Resume Uploads</h6>
+    <a href="{% url 'upload_resume' %}" class="btn btn-g btn-sm"><i class="bi bi-plus-lg me-1"></i>New Upload</a>
+  </div>
+  {% for r in resumes %}
+  <div class="d-flex align-items-center gap-3 p-3 mb-2" style="background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px">
+    <div style="width:42px;height:42px;border-radius:11px;background:rgba(91,76,245,.13);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+      <i class="bi bi-file-earmark-pdf-fill" style="color:#A78BFA;font-size:18px"></i>
+    </div>
+    <div style="flex:1;min-width:0">
+      <div style="font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.original_filename }}</div>
+      <div style="font-size:11.5px;color:rgba(255,255,255,.35)">Uploaded {{ r.uploaded_at|date:"M d, Y · H:i" }}</div>
+    </div>
+    {% if r.status == 'completed' and r.analysis %}
+    <div class="d-none d-md-flex gap-3 text-center me-2">
+      <div><div style="font-size:16px;font-weight:800;color:#A78BFA;font-family:'Sora',sans-serif">{{ r.analysis.resume_score }}</div><div style="font-size:10px;color:rgba(255,255,255,.3)">Score</div></div>
+      <div><div style="font-size:16px;font-weight:800;color:#67E8F9;font-family:'Sora',sans-serif">{{ r.analysis.ats_score }}</div><div style="font-size:10px;color:rgba(255,255,255,.3)">ATS</div></div>
+    </div>
+    <a href="{% url 'resume_analysis' r.pk %}" class="btn btn-g btn-sm">View Report</a>
+    {% elif r.status == 'failed' %}
+    <span style="font-size:12px;background:rgba(239,68,68,.1);color:#FCA5A5;padding:4px 10px;border-radius:12px;font-weight:600">Failed</span>
+    {% else %}
+    <span style="font-size:12px;background:rgba(245,158,11,.1);color:#FCD34D;padding:4px 10px;border-radius:12px;font-weight:600">Pending</span>
+    {% endif %}
+  </div>
+  {% empty %}
+  <div class="text-center py-5">
+    <div style="font-size:52px;margin-bottom:16px">📂</div>
+    <h6 style="font-weight:700;margin-bottom:8px">No Resumes Yet</h6>
+    <p style="color:rgba(255,255,255,.35);font-size:13.5px;margin-bottom:20px">Upload your first resume to get started</p>
+    <a href="{% url 'upload_resume' %}" class="btn btn-g">Upload Resume</a>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

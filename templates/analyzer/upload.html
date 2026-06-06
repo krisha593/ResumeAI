@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Upload Resume - ResumeAI{% endblock %}
+{% block page_title %}Upload Resume{% endblock %}
+{% block content %}
+<h1 style="color:red;font-size:60px">
+UPLOAD PAGE TEST
+</h1>
+
+<div style="background:yellow;color:black;padding:20px">
+IF YOU SEE THIS, CONTENT IS RENDERING
+</div>
+<div class="row g-4 justify-content-center">
+  <div class="col-lg-7">
+    <div class="card-d p-4 mb-4">
+      <h5 style="font-weight:800;margin-bottom:5px;color:#EAE8FF">Upload Your Resume</h5>
+      <p style="color:rgba(255,255,255,.4);font-size:13.5px;margin-bottom:22px">PDF only. Max 5MB. AI analyzes instantly.</p>
+      <form method="post" enctype="multipart/form-data" id="uploadForm">
+        {% csrf_token %}
+        <div id="dropZone" onclick="document.getElementById('rf').click()"
+          style="border:2px dashed rgba(91,76,245,.4);border-radius:16px;padding:50px 24px;text-align:center;cursor:pointer;transition:all .25s;margin-bottom:18px;background:rgba(91,76,245,.03)">
+          <div id="dropContent">
+            <div style="font-size:52px;margin-bottom:14px">📄</div>
+            <h5 style="font-weight:700;margin-bottom:7px;color:#EAE8FF">Drop your resume here</h5>
+            <p style="color:rgba(255,255,255,.4);font-size:13.5px;margin-bottom:18px">or click to browse files</p>
+            <span style="background:rgba(91,76,245,.15);border:1px solid rgba(91,76,245,.35);color:#A78BFA;padding:8px 22px;border-radius:8px;font-size:13px;font-weight:600">Browse PDF File</span>
+          </div>
+          <div id="filePreview" style="display:none">
+            <div style="font-size:52px;margin-bottom:12px">✅</div>
+            <h5 id="fn" style="color:#6EE7B7;font-weight:700">File selected</h5>
+            <p id="fs" style="color:rgba(255,255,255,.4);font-size:13px">Ready to analyze</p>
+          </div>
+        </div>
+        <input type="file" id="rf" name="resume_file" accept=".pdf" style="display:none" required/>
+        <button type="submit" id="submitBtn" class="btn btn-g w-100 py-3" style="font-size:15px">
+          <span id="bt"><i class="bi bi-cpu-fill me-2"></i>Analyze Resume with AI</span>
+          <span id="bl" style="display:none">
+            <div class="spinner-border spinner-border-sm me-2" role="status"></div>Analyzing...
+          </span>
+        </button>
+      </form>
+    </div>
+
+    <div class="card-d p-4">
+      <h6 style="font-weight:700;margin-bottom:14px;color:#EAE8FF">
+        <i class="bi bi-lightbulb-fill me-2" style="color:#FCD34D"></i>Tips for Best Score
+      </h6>
+      <div class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill" style="color:#6EE7B7;font-size:13px;margin-top:2px;flex-shrink:0"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Use standard headings: Experience, Education, Skills, Projects</span></div>
+      <div class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill" style="color:#6EE7B7;font-size:13px;margin-top:2px;flex-shrink:0"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Add measurable achievements with numbers and percentages</span></div>
+      <div class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill" style="color:#6EE7B7;font-size:13px;margin-top:2px;flex-shrink:0"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">List all technical skills — tools, languages, frameworks</span></div>
+      <div class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill" style="color:#6EE7B7;font-size:13px;margin-top:2px;flex-shrink:0"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Include LinkedIn and GitHub profile links</span></div>
+      <div class="d-flex align-items-start gap-2 mb-2"><i class="bi bi-check-circle-fill" style="color:#6EE7B7;font-size:13px;margin-top:2px;flex-shrink:0"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Keep to 1-2 pages with clear formatting</span></div>
+      <div class="d-flex align-items-start gap-2"><i class="bi bi-check-circle-fill" style="color:#6EE7B7;font-size:13px;margin-top:2px;flex-shrink:0"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Add certifications from Coursera, Udemy, AWS, Google</span></div>
+    </div>
+  </div>
+
+  <div class="col-lg-5">
+    <div class="card-d p-4 mb-4">
+      <h6 style="font-weight:700;margin-bottom:14px;color:#EAE8FF">Upload History</h6>
+      {% for r in recent_resumes %}
+      <div class="d-flex align-items-center gap-3 py-3" style="border-bottom:1px solid rgba(255,255,255,.04)">
+        <div style="width:38px;height:38px;border-radius:10px;background:rgba(91,76,245,.12);display:flex;align-items:center;justify-content:center;flex-shrink:0">
+          <i class="bi bi-file-earmark-pdf-fill" style="color:#A78BFA;font-size:16px"></i>
+        </div>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#EAE8FF">{{ r.original_filename }}</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3)">{{ r.uploaded_at|date:"M d, Y" }}</div>
+        </div>
+        {% if r.status == 'completed' %}
+          <a href="{% url 'resume_analysis' r.pk %}" style="font-size:11px;background:rgba(16,185,129,.12);color:#6EE7B7;border:1px solid rgba(16,185,129,.25);padding:3px 9px;border-radius:12px;text-decoration:none;font-weight:600">View</a>
+        {% elif r.status == 'failed' %}
+          <span style="font-size:11px;background:rgba(239,68,68,.1);color:#FCA5A5;padding:3px 9px;border-radius:12px;font-weight:600">Failed</span>
+        {% else %}
+          <span style="font-size:11px;background:rgba(245,158,11,.1);color:#FCD34D;padding:3px 9px;border-radius:12px;font-weight:600">Pending</span>
+        {% endif %}
+      </div>
+      {% empty %}
+      <p style="color:rgba(255,255,255,.3);font-size:13px;text-align:center;padding:14px 0">No resumes uploaded yet</p>
+      {% endfor %}
+    </div>
+
+    <div class="card-d p-4">
+      <h6 style="font-weight:700;margin-bottom:14px;color:#EAE8FF">
+        <i class="bi bi-cpu-fill me-2" style="color:#A78BFA"></i>What AI Detects
+      </h6>
+      <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Overall Resume Score (0-100)</span></div>
+      <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">ATS Compatibility Score</span></div>
+      <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Technical Skills Extraction</span></div>
+      <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Missing Skills Detection</span></div>
+      <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Job Role and Experience Level</span></div>
+      <div class="d-flex align-items-center gap-2 mb-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">7 Actionable Improvement Tips</span></div>
+      <div class="d-flex align-items-center gap-2"><i class="bi bi-check2-circle" style="color:#A78BFA;font-size:13px"></i><span style="font-size:13px;color:rgba(255,255,255,.55)">Personalized Job Recommendations</span></div>
+    </div>
+  </div>
+</div>
+
+{% block extra_js %}
+<script>
+const dz=document.getElementById('dropZone'),fi=document.getElementById('rf');
+const dc=document.getElementById('dropContent'),fp=document.getElementById('filePreview');
+fi.addEventListener('change',function(){if(this.files[0])showFile(this.files[0])});
+dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='rgba(91,76,245,.8)';dz.style.background='rgba(91,76,245,.08)'});
+dz.addEventListener('dragleave',()=>{dz.style.borderColor='rgba(91,76,245,.4)';dz.style.background='rgba(91,76,245,.03)'});
+dz.addEventListener('drop',e=>{
+  e.preventDefault();
+  const f=e.dataTransfer.files[0];
+  if(f&&f.type==='application/pdf'){
+    const dt=new DataTransfer();dt.items.add(f);fi.files=dt.files;showFile(f);
+  }else{alert('Please upload a PDF file only.');}
+});
+function showFile(f){
+  dc.style.display='none';fp.style.display='block';
+  document.getElementById('fn').textContent=f.name;
+  document.getElementById('fs').textContent=(f.size/1024).toFixed(1)+' KB';
+  dz.style.borderColor='rgba(16,185,129,.5)';dz.style.background='rgba(16,185,129,.04)';
+}
+document.getElementById('uploadForm').addEventListener('submit',function(){
+  document.getElementById('bt').style.display='none';
+  document.getElementById('bl').style.display='inline-flex';
+  document.getElementById('submitBtn').disabled=true;
+});
+</script>
+{% endblock %}
+{% endblock %}

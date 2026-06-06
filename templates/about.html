@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}About - ResumeAI{% endblock %}
+{% block content %}
+<div style="padding:80px 0;min-height:80vh">
+  <div class="container" style="max-width:800px">
+    <div class="text-center mb-5">
+      <h1 style="font-weight:800;font-size:38px;background:linear-gradient(135deg,#5B4CF5,#8B5CF6,#06B6D4);-webkit-background-clip:text;-webkit-text-fill-color:transparent">About ResumeAI</h1>
+      <p style="color:rgba(255,255,255,.5);font-size:15px;margin-top:10px">A college major project built to help students land their dream jobs</p>
+    </div>
+    <div style="background:#161528;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:36px;margin-bottom:22px">
+      <h4 style="font-weight:700;margin-bottom:14px">🎯 Project Overview</h4>
+      <p style="color:rgba(255,255,255,.55);line-height:1.8;font-size:15px">ResumeAI is an AI-powered resume analysis and job recommendation system built as a Major Project for the Computer Science Department. It helps students and professionals improve their resumes, understand ATS compatibility, and find matching job opportunities.</p>
+    </div>
+    <div style="background:#161528;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:36px;margin-bottom:22px">
+      <h4 style="font-weight:700;margin-bottom:16px">🛠️ Tech Stack Used</h4>
+      <div class="d-flex flex-wrap gap-2">
+        <span class="skill-badge">Django</span>
+        <span class="skill-badge">Python</span>
+        <span class="skill-badge">SQLite</span>
+        <span class="skill-badge">Bootstrap 5</span>
+        <span class="skill-badge">JavaScript</span>
+        <span class="skill-badge">HTML5</span>
+        <span class="skill-badge">CSS3</span>
+      </div>
+    </div>
+    <div style="background:#161528;border:1px solid rgba(255,255,255,.07);border-radius:20px;padding:36px">
+      <h4 style="font-weight:700;margin-bottom:16px">✨ Key Features</h4>
+      <ul style="color:rgba(255,255,255,.55);line-height:2;font-size:15px;padding-left:20px">
+        <li>AI-powered resume scoring and analysis</li>
+        <li>ATS compatibility check with detailed score</li>
+        <li>Automatic skill extraction and gap detection</li>
+        <li>Smart job recommendations with match percentage</li>
+        <li>Course recommendations from top platforms</li>
+        <li>Professional user dashboard with analytics</li>
+        <li>Admin panel for system management</li>
+      </ul>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,6 @@
+t = open('templates/base.html', encoding='utf-8').read()
+t = t.replace('BASE TEST 123456', '')
+t = t.replace('BASE TEST', '')
+open('templates/base.html', 'w', encoding='utf-8').write(t)
+print("Removed test text!")
+print("block content count:", t.count('{% block content %}'))
