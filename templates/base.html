@@ -131,11 +131,13 @@ body{font-family:'Plus Jakarta Sans',sans-serif;background:#0D0C1E;color:#EAE8FF
         </div>
       {% endfor %}
     {% endif %}
-    {% block content %}{% endblock %}
   </div>
 </div>
 
 {% endif %}
+
+{% block content %}
+{% endblock %}
 
 {% include 'partials/footer.html' %}
 
